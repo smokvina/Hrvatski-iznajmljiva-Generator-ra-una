@@ -1,0 +1,5 @@
+{
+  "name": "Hrvatski iznajmljivač Generator računa",
+  "description": "A professional invoice generator for Croatian private renters. It creates print-ready invoices with detailed cost breakdowns, following local standards.",
+  "requestFramePermissions": []
+}
