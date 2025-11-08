@@ -172,81 +172,89 @@
   <!-- Invoice Preview -->
   <div id="invoice-preview" class="bg-white shadow-lg rounded-lg p-8 md:p-12 print:shadow-none print:my-0 print:max-w-full print:p-0">
     <!-- Header -->
-    <header class="flex justify-between items-start pb-8 border-b-2 border-gray-200">
+    <header class="flex justify-between items-start pb-6 border-b">
       <div>
-        <h1 class="text-3xl font-bold text-gray-800">{{ host().name }}</h1>
-        <p class="text-sm text-gray-500">{{ host().address }}</p>
+        <h1 class="text-3xl font-bold text-gray-900">{{ host().name }}</h1>
+        <p class="text-sm text-gray-600">{{ host().address }}</p>
+        <p class="text-sm text-gray-600">OIB: {{ host().oib }}</p>
+        <p class="text-sm text-gray-600 mt-1">{{ host().legalStatus }}</p>
       </div>
-      <h2 class="text-4xl font-bold text-gray-700 uppercase">Račun</h2>
+      <div class="text-right">
+        <h2 class="text-4xl font-bold text-gray-800 uppercase">RAČUN</h2>
+      </div>
     </header>
 
-    <!-- Host and Guest Info -->
-    <section class="grid grid-cols-1 md:grid-cols-2 gap-8 my-8">
-      <div>
-        <h3 class="font-semibold text-gray-800 border-b pb-2 mb-2">Izdavatelj:</h3>
-        <p class="font-bold">{{ host().name }}</p>
-        <p class="text-gray-600">{{ host().address }}</p>
-        <p class="text-gray-600">OIB: {{ host().oib }}</p>
-        <p class="text-gray-600 font-semibold mt-1">{{ host().legalStatus }}</p>
-      </div>
-      <div>
-        <h3 class="font-semibold text-gray-800 border-b pb-2 mb-2">Primatelj:</h3>
-        <p class="font-bold">{{ guest().name }}</p>
-        <p class="text-gray-600">{{ guest().country }}</p>
-        <p class="text-gray-600">{{ guest().email }}</p>
-      </div>
+    <!-- Guest and Invoice Details -->
+    <section class="flex justify-between my-8">
+        <div class="w-1/2">
+            <h3 class="text-md font-semibold text-gray-800">Primatelj:</h3>
+            <p class="font-bold text-gray-700">{{ guest().name }}</p>
+            <p class="text-gray-600">{{ guest().country }}</p>
+            <p class="text-gray-600">{{ guest().email }}</p>
+        </div>
+        <div class="w-1/2 text-right">
+             <div class="mb-2">
+                <span class="text-sm text-gray-500">Broj računa: </span>
+                <span class="font-bold text-gray-800">{{ invoice().number }}</span>
+             </div>
+             <div class="mb-2">
+                <span class="text-sm text-gray-500">Datum izdavanja: </span>
+                <span class="font-bold text-gray-800">{{ invoice().issueDate | date:'dd.MM.yyyy.' }}</span>
+             </div>
+             <div>
+                <span class="text-sm text-gray-500">Datum dospijeća: </span>
+                <span class="font-bold text-gray-800">{{ invoice().dueDate | date:'dd.MM.yyyy.' }}</span>
+             </div>
+        </div>
     </section>
-
-    <!-- Invoice Details -->
-    <section class="grid grid-cols-1 md:grid-cols-3 gap-4 my-8 p-4 bg-gray-50 rounded-lg">
-      <div>
-        <p class="text-sm text-gray-500">Broj računa</p>
-        <p class="font-bold text-gray-800">{{ invoice().number }}</p>
-      </div>
-      <div>
-        <p class="text-sm text-gray-500">Datum izdavanja</p>
-        <p class="font-bold text-gray-800">{{ invoice().issueDate | date:'dd.MM.yyyy.' }}</p>
-      </div>
-      <div>
-        <p class="text-sm text-gray-500">Datum dospijeća</p>
-        <p class="font-bold text-gray-800">{{ invoice().dueDate | date:'dd.MM.yyyy.' }}</p>
+    
+    <!-- Reservation Details -->
+    <section class="my-8 p-4 bg-gray-50 rounded-lg">
+      <h3 class="font-semibold text-gray-800 mb-2">Detalji rezervacije:</h3>
+      <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-sm">
+        <span class="text-gray-600">Smještaj:</span><span class="font-bold text-gray-700">{{ reservation().apartment }}</span>
+        <span class="text-gray-600">Period:</span><span class="font-bold text-gray-700">{{ reservation().arrival | date:'dd.MM.yyyy.' }} - {{ reservation().departure | date:'dd.MM.yyyy.' }}</span>
+        <span class="text-gray-600">Broj noćenja:</span><span class="font-bold text-gray-700">{{ reservation().nights }}</span>
+        <span class="text-gray-600">Broj gostiju:</span><span class="font-bold text-gray-700">{{ reservation().adults }} odraslih</span>
       </div>
     </section>
 
     <!-- Itemized Breakdown -->
-    <section class="my-8">
-      <h3 class="font-semibold text-gray-800 border-b pb-2 mb-4">Detalji rezervacije:</h3>
-      <p class="text-gray-600">Smještaj: <span class="font-bold">{{ reservation().apartment }}</span></p>
-      <p class="text-gray-600">Period: <span class="font-bold">{{ reservation().arrival | date:'dd.MM.yyyy.' }} - {{ reservation().departure | date:'dd.MM.yyyy.' }}</span></p>
-      <p class="text-gray-600">Broj noćenja: <span class="font-bold">{{ reservation().nights }}</span></p>
-      <p class="text-gray-600">Broj gostiju: <span class="font-bold">{{ reservation().adults }} odraslih</span></p>
-
-      <div class="mt-8 flow-root">
+    <section class="my-10">
+      <div class="flow-root">
         <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
             <table class="min-w-full divide-y divide-gray-300">
-              <thead class="bg-gray-100">
+              <thead class="bg-gray-50">
                 <tr>
                   <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Stavka</th>
                   <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Opis</th>
-                  <th scope="col" class="px-3 py-3.5 text-right text-sm font-semibold text-gray-900">Iznos (EUR)</th>
+                  <th scope="col" class="px-3 py-3.5 text-right text-sm font-semibold text-gray-900">Količina</th>
+                  <th scope="col" class="px-3 py-3.5 text-right text-sm font-semibold text-gray-900">Jed. cijena (EUR)</th>
+                  <th scope="col" class="py-3.5 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 sm:pr-0">Iznos (EUR)</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-gray-200 bg-white">
+              <tbody class="divide-y divide-gray-200">
                 <tr>
-                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">Smještaj</td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ reservation().nights }} noći x {{ reservation().pricePerNight | number:'1.2-2':'hr' }} €</td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-right">{{ accommodationCost() | number:'1.2-2':'hr' }}</td>
+                  <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">Smještaj</td>
+                  <td class="px-3 py-4 text-sm text-gray-500"></td>
+                  <td class="px-3 py-4 text-sm text-gray-500 text-right">{{ reservation().nights }}</td>
+                  <td class="px-3 py-4 text-sm text-gray-500 text-right">{{ reservation().pricePerNight | number:'1.2-2':'hr' }}</td>
+                  <td class="py-4 pl-3 pr-4 text-sm text-right font-medium sm:pr-0">{{ accommodationCost() | number:'1.2-2':'hr' }}</td>
                 </tr>
                 <tr>
-                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">Boravišna pristojba</td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{{ reservation().adults }} osobe x {{ reservation().nights }} noći x {{ reservation().touristTaxPerPersonPerNight | number:'1.2-2':'hr' }} €</td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-right">{{ touristTaxTotal() | number:'1.2-2':'hr' }}</td>
+                  <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">Boravišna pristojba</td>
+                  <td class="px-3 py-4 text-sm text-gray-500">{{ reservation().adults }} osobe x {{ reservation().nights }} noći</td>
+                  <td class="px-3 py-4 text-sm text-gray-500 text-right">1</td>
+                  <td class="px-3 py-4 text-sm text-gray-500 text-right">{{ touristTaxTotal() | number:'1.2-2':'hr' }}</td>
+                  <td class="py-4 pl-3 pr-4 text-sm text-right font-medium sm:pr-0">{{ touristTaxTotal() | number:'1.2-2':'hr' }}</td>
                 </tr>
                 <tr>
-                  <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">Završno čišćenje</td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">Jednokratno</td>
-                  <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-right">{{ reservation().cleaningFee | number:'1.2-2':'hr' }}</td>
+                  <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">Završno čišćenje</td>
+                  <td class="px-3 py-4 text-sm text-gray-500">Jednokratno</td>
+                  <td class="px-3 py-4 text-sm text-gray-500 text-right">1</td>
+                  <td class="px-3 py-4 text-sm text-gray-500 text-right">{{ reservation().cleaningFee | number:'1.2-2':'hr' }}</td>
+                  <td class="py-4 pl-3 pr-4 text-sm text-right font-medium sm:pr-0">{{ reservation().cleaningFee | number:'1.2-2':'hr' }}</td>
                 </tr>
               </tbody>
             </table>
@@ -256,8 +264,8 @@
     </section>
 
     <!-- Totals -->
-    <section class="flex justify-end mt-8">
-      <div class="w-full max-w-sm">
+    <section class="flex justify-end mt-10">
+      <div class="w-full max-w-md">
         <div class="flex justify-between py-2 border-b">
           <span class="text-gray-600">Ukupno:</span>
           <span class="font-semibold text-gray-800">{{ totalAmount() | number:'1.2-2':'hr' }} EUR</span>
@@ -266,26 +274,34 @@
           <span class="text-gray-600">Uplaćena akontacija:</span>
           <span class="font-semibold text-gray-800">- {{ reservation().prepayment | number:'1.2-2':'hr' }} EUR</span>
         </div>
-        <div class="flex justify-between py-3 bg-gray-100 rounded-b-lg px-2 mt-2">
-          <span class="text-lg font-bold text-gray-900">Za platiti:</span>
-          <span class="text-lg font-bold text-gray-900">{{ balanceDue() | number:'1.2-2':'hr' }} EUR</span>
+        <div class="flex justify-between py-4 bg-gray-100 rounded-b-lg px-4 mt-2">
+          <span class="text-xl font-bold text-gray-900">ZA PLATITI:</span>
+          <span class="text-xl font-bold text-gray-900">{{ balanceDue() | number:'1.2-2':'hr' }} EUR</span>
         </div>
       </div>
     </section>
 
     <!-- Payment Information -->
-    <section class="my-8 pt-8 border-t-2 border-gray-200">
+    <section class="my-10 pt-6 border-t">
       <h3 class="font-semibold text-gray-800 mb-2">Podaci za plaćanje:</h3>
-      <p class="text-gray-600">Banka: <span class="font-semibold">{{ host().bank }}</span></p>
-      <p class="text-gray-600">IBAN: <span class="font-semibold">{{ host().iban }}</span></p>
-      <p class="text-gray-600">Primatelj: <span class="font-semibold">{{ host().name }}</span></p>
-      <p class="text-gray-600">Poziv na broj: <span class="font-semibold">{{ invoice().number }}</span></p>
+      <p class="text-gray-600 text-sm">Banka: <span class="font-semibold">{{ host().bank }}</span></p>
+      <p class="text-gray-600 text-sm">IBAN: <span class="font-semibold">{{ host().iban }}</span></p>
+      <p class="text-gray-600 text-sm">Primatelj: <span class="font-semibold">{{ host().name }}</span></p>
+      <p class="text-gray-600 text-sm">Poziv na broj: <span class="font-semibold">{{ invoice().number }}</span></p>
+    </section>
+    
+    <!-- Signature -->
+    <section class="mt-16 pt-10 border-t text-sm text-gray-500">
+        <div class="flex justify-between">
+            <div>
+                <p>Hvala na Vašem boravku!</p>
+            </div>
+            <div class="w-48 text-center">
+                <div class="border-b border-gray-400 mb-2"></div>
+                <p>Potpis izdavatelja</p>
+            </div>
+        </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="text-center text-sm text-gray-500 pt-8 mt-8 border-t">
-      <p>Hvala na Vašem boravku!</p>
-      <p>{{ host().name }} | {{ guest().email }}</p>
-    </footer>
   </div>
 </div>

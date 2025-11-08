@@ -60,7 +60,7 @@ export class AppComponent implements OnInit {
     name: 'Apartmani Sunce',
     address: 'Jadranska Cesta 123, 21300 Makarska, Croatia',
     oib: '12345678901',
-    legalStatus: 'Privatni iznajmljivač van sustava PDV-a',
+    legalStatus: 'Privatni iznajmljivač izvan sustava PDV-a',
     iban: 'HR1234567890123456789',
     bank: 'Hrvatska Poštanska Banka d.d.',
   });
@@ -85,9 +85,9 @@ export class AppComponent implements OnInit {
   });
 
   invoice = signal<Invoice>({
-    number: `2024-${this.getInvoiceSequence()}`,
-    issueDate: new Date(),
-    dueDate: new Date(new Date().setDate(new Date().getDate() + 7)), // Due in 7 days
+    number: `2024-001`,
+    issueDate: new Date('2025-11-08'),
+    dueDate: new Date('2025-11-15'),
   });
 
   accommodationCost = computed(() => this.reservation().nights * this.reservation().pricePerNight);
@@ -173,11 +173,6 @@ export class AppComponent implements OnInit {
       return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     }
     return 0;
-  }
-
-  private getInvoiceSequence(): string {
-    // In a real app, this would come from a database or service.
-    return '001';
   }
 
   printInvoice(): void {
