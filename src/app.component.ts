@@ -138,8 +138,8 @@ export class AppComponent implements OnInit {
         this.host.set(value.host);
         this.guest.set(value.guest);
 
-        const arrival = new Date(value.reservation.arrival);
-        const departure = new Date(value.reservation.departure);
+        const arrival = new Date(value.reservation.arrival + 'T00:00:00');
+        const departure = new Date(value.reservation.departure + 'T00:00:00');
         const nights = this.calculateNights(arrival, departure);
 
         this.reservation.set({
@@ -156,8 +156,8 @@ export class AppComponent implements OnInit {
 
         this.invoice.set({
             ...value.invoice,
-            issueDate: new Date(value.invoice.issueDate),
-            dueDate: new Date(value.invoice.dueDate),
+            issueDate: new Date(value.invoice.issueDate + 'T00:00:00'),
+            dueDate: new Date(value.invoice.dueDate + 'T00:00:00'),
         });
       }
     });
@@ -187,25 +187,34 @@ export class AppComponent implements OnInit {
   exportAsPDF(): void {
     const invoicePreviewElement = document.getElementById('invoice-preview');
     if (invoicePreviewElement) {
-      const pdf = new jspdf.jsPDF('p', 'mm', 'a4'); // Create new PDF in A4 Portrait format
+      const pdf = new jspdf.jsPDF('p', 'mm', 'a4');
       
-      // Use the html method which is more robust and handles paging automatically.
-      // It uses html2canvas internally but manages the process better, preserving text
-      // and handling layouts more effectively.
       pdf.html(invoicePreviewElement, {
         callback: (doc: any) => {
-          // Save the PDF
           doc.save(`racun-${this.invoice().number}.pdf`);
         },
-        // Set margins for a professional look
         margin: [15, 15, 15, 15],
-        // Automatically handle page breaks
         autoPaging: 'slice',
-        // Specify the width of the content in the PDF.
-        // A4 paper is 210mm wide. With 15mm margins, content width is 180mm.
         width: 180,
-        // The width of the source HTML element. This is used for scaling.
         windowWidth: invoicePreviewElement.scrollWidth,
+        fontFaces: [
+          {
+            family: 'Noto Sans',
+            style: 'normal',
+            weight: 'normal',
+            src: [
+              { url: 'https://fonts.gstatic.com/s/notosans/v27/o-0IIpQlx3QUlC5A4PNr6DRASf6M7VBj.woff2', format: 'woff2' }
+            ]
+          },
+          {
+            family: 'Noto Sans',
+            style: 'normal',
+            weight: 'bold',
+            src: [
+              { url: 'https://fonts.gstatic.com/s/notosans/v27/o-0NIpQlx3QUlC5A4PNjXhFVadyB1Wk_aA.woff2', format: 'woff2' }
+            ]
+          }
+        ]
       });
     }
   }
