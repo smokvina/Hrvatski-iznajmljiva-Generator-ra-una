@@ -185,29 +185,27 @@ export class AppComponent implements OnInit {
   }
 
   exportAsPDF(): void {
-    const data = document.getElementById('invoice-preview');
-    if (data) {
-      html2canvas(data, { scale: 2 }).then(canvas => { // Higher scale for better quality
-        const contentDataURL = canvas.toDataURL('image/png');
-        const pdf = new jspdf.jsPDF('p', 'mm', 'a4'); // A4 size page of PDF
-        
-        const imgWidth = 210; // A4 width in mm
-        const pageHeight = 297; // A4 height in mm
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        let heightLeft = imgHeight;
-        let position = 0;
-
-        pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-
-        while (heightLeft > 0) {
-          position = heightLeft - imgHeight;
-          pdf.addPage();
-          pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
-        }
-        
-        pdf.save(`racun-${this.invoice().number}.pdf`);
+    const invoicePreviewElement = document.getElementById('invoice-preview');
+    if (invoicePreviewElement) {
+      const pdf = new jspdf.jsPDF('p', 'mm', 'a4'); // Create new PDF in A4 Portrait format
+      
+      // Use the html method which is more robust and handles paging automatically.
+      // It uses html2canvas internally but manages the process better, preserving text
+      // and handling layouts more effectively.
+      pdf.html(invoicePreviewElement, {
+        callback: (doc: any) => {
+          // Save the PDF
+          doc.save(`racun-${this.invoice().number}.pdf`);
+        },
+        // Set margins for a professional look
+        margin: [15, 15, 15, 15],
+        // Automatically handle page breaks
+        autoPaging: 'slice',
+        // Specify the width of the content in the PDF.
+        // A4 paper is 210mm wide. With 15mm margins, content width is 180mm.
+        width: 180,
+        // The width of the source HTML element. This is used for scaling.
+        windowWidth: invoicePreviewElement.scrollWidth,
       });
     }
   }
